@@ -19,9 +19,7 @@ CLAMMIT_THREADS      | (Optional) Number of CPU threads to use. Default is a num
 docker-compose.yml services section example:
 ```yaml
     clammit:
-        build:
-            context: .
-            dockerfile: Dockerfile.clammit
+        image: maxsivkov/clammit
         ports:
           - "8438:8438"
         environment:
