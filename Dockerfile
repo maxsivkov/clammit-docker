@@ -2,6 +2,7 @@ FROM golang:alpine AS build-env
 ENV CGO_ENABLED 0
 WORKDIR /app 
 RUN apk add --no-cache git mercurial ca-certificates git make cmake 
+ENV GOBIN=/app/bin
 RUN git clone https://github.com/ifad/clammit . && make all
 
 # Build runtime image
