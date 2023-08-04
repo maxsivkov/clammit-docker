@@ -19,4 +19,6 @@ USER clam
 COPY --from=build-env --chown=clam:clam /app/bin/clammit .
 COPY --from=build-env --chown=clam:clam /app/testfiles ./testfiles
 
+EXPOSE 9090
+
 ENTRYPOINT ["sh", "/launcher.sh", "/home/clam/clammit.cfg", "/home/clam/clammit", "-config", "clammit.cfg"]
