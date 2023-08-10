@@ -25,15 +25,23 @@ WORKDIR /home/clam
 
 COPY launcher.sh /
 
-USER root
-RUN freshclam
-RUN chown clam /var/spool/cron/crontabs/root 
-RUN chown clam /var/log/clamav/freshclam.log
-RUN chown -R clam /var/lib/clamav/
-RUN chown -R clam /launcher.sh
-RUN chmod g+s /var/spool/cron/crontabs/root
-RUN chmod +x /launcher.sh
-RUN echo "* * * * * freshclam" >> /var/spool/cron/crontabs/root
+# Update virus definitions, set permissions, and create required directories and files
+RUN freshclam && \
+    mkdir -p /var/log/clamav && touch /var/log/clamav/clamd.log && touch /var/log/clamav/freshclam.log && \
+    mkdir -p /run/clamav && touch /run/clamav/clamd.pid && \
+    chown -R clam:clam /run/clamav && \
+    chown clam /var/spool/cron/crontabs/root && \
+    chown clam /var/log/clamav/freshclam.log && \
+    chown clam /var/log/clamav/clamd.log && \
+    chown -R clam /var/lib/clamav/ && \
+    chown clam /launcher.sh && \
+    chmod g+s /var/spool/cron/crontabs/root && \
+    chmod +x /launcher.sh && \
+    echo "* * * * * freshclam" >> /var/spool/cron/crontabs/root 
+
+# Configure clamd to listen on TCP
+RUN echo "TCPSocket 3310" >> /etc/clamav/clamd.conf && \
+    echo "TCPAddr 127.0.0.1" >> /etc/clamav/clamd.conf  
 
 USER clam
 COPY --from=build-env --chown=clam:clam /app/bin/clammit .
