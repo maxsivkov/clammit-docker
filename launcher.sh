@@ -1,3 +1,5 @@
+#!/bin/sh
+
 CONF=$1; shift
 
 echo "[ application ]" > $CONF
@@ -10,6 +12,16 @@ echo "[ application ]" > $CONF
 [ ! -z "${CLAMMIT_STATUS_CODE}" ] && echo "virus-status-code=$CLAMMIT_STATUS_CODE" >> $CONF
 [ ! -z "${CLAMMIT_MEMORY_THRESHOLD}" ] && echo "content-memory-threshold=$CLAMMIT_MEMORY_THRESHOLD" >> $CONF
 [ ! -z "${CLAMMIT_THREADS}" ] && echo "num-threads=$CLAMMIT_THREADS" >> $CONF
-echo "running clammit with config $CONF"
+
+echo "Generated clammit config:"
 cat $CONF
+
+# Start clamd
+echo "Starting clamd..."
+clamd &
+
+# Give clamd some time to start
+sleep 5
+
+echo "Starting clammit..."
 $@
