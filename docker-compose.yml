@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  clamav-server:
+    build: .
+    ports:
+      - "8438:8438"
+    environment:
+      - CLAMMIT_LISTEN=${CLAMMIT_LISTEN}
+      - CLAMMIT_CLAMD_URL=${CLAMMIT_CLAMD_URL}
+#    env_file:
+#      - .env
